@@ -12,6 +12,7 @@ class Mapper(models.Model):
     def check_edits(self):
         feed=feedparser.parse('http://www.openstreetmap.org/user/'
                           + self.user + '/edits/feed')
-        self.edit_date=feed.entries[0].published
-        self.scan_date=datetime.datetime.now(pytz.utc)
+        if len(feed.entries) > 0:
+            self.edit_date=feed.entries[0].published
+            self.scan_date=datetime.datetime.now(pytz.utc)
 
