@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from follower.models import Mapper
 from django.template import Context,loader
 import datetime,pytz,time
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def list(request):
     """
     Display a list of mappers we are following

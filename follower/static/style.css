@@ -17,10 +17,24 @@ h1 {
 }
 
 .date {
-    text-align: right;
+    text-align: left;
     padding: 15px;
 }
 .user_name {
     text-align: left;
     padding: 15px;
+    
+}
+.base-table {
+    cellspacing: 10px;
+    width: 100%;
+}
+.table-header {
+    text-align:left;
+    padding: 5px;
+}
+.table-row {
+    text-align: left;
+    padding: 5px;
+    width: 100%;
 }

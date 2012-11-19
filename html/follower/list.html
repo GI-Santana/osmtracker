@@ -2,15 +2,17 @@
 <title>OSMTracker User Listing</title>
 <link rel="stylesheet" href="/static/style.css" type="text/css" />
 <body>
-<table>
-<th class="table-header">
-<td>User</td>
-<td>Last Changeset Date</td>
-<td>First Edit Date</td>
-<td>Edit Count</td>
-</th>
+<table class="base-table">
+<thead>
+<tr class="table-header">
+<th class="table-header">User</th>
+<th class="table-header">Last Changeset Date</th>
+<th class="table-header">First Edit Date</th>
+<th class="table-header">Edit Count</th>
+</tr>
+</thead>
 {% for m in tracker_list %}
-<tr>
+<tr class="table-row">
   <td class="user_name" >
    <a href="http://www.openstreetmap.org/user/{{m.user}}/edits">{{m.user}}</a>
   </td>
@@ -26,3 +28,7 @@
 </tr>
 {% endfor %}
 </table>
+
+</body>
+
+</html>
