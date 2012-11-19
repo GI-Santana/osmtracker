@@ -11,6 +11,8 @@ class Mapper(models.Model):
     scan_date=models.DateTimeField('last_scan_date',null=True,blank=True)
     edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     first_edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
+    min_edit_count=models.IntegerField('min_edit_count',null=True,blank=True)
+
     def check_edits(self):
         url='http://www.openstreetmap.org/user/' \
             +urllib.quote(self.user) + '/edits/feed'
@@ -40,6 +42,8 @@ class Mapper(models.Model):
             if self.first_edit_date==None or \
                     first_edit_date < self.first_edit_date:
                 self.first_edit_date=first_edit_date
-                
+            if self.min_edit_count == None or \
+                    self.min_edit_count < len(feed.entries):
+                self.min_edit_count=len(feed.entries)
             self.scan_date=datetime.now(pytz.utc)
 

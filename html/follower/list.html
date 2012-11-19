@@ -7,6 +7,7 @@
 <td>User</td>
 <td>Last Changeset Date</td>
 <td>First Edit Date</td>
+<td>Edit Count</td>
 </th>
 {% for m in tracker_list %}
 <tr>
@@ -18,6 +19,9 @@
   </td>
    <td class="date">
      {{m.first_edit_date|date:"Y-m-d" }}
+  </td>
+  <td>
+    {{m.min_edit_count}}
   </td>
 </tr>
 {% endfor %}
