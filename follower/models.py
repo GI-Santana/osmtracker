@@ -33,8 +33,9 @@ class Mapper(models.Model):
                                      ,0
                                      ,pytz.utc)
 
-            is_older_edit=first_edit_date < self.first_edit_date
-            if self.first_edit_date==None or is_older_edit:
+            
+            if self.first_edit_date==None or \
+                    first_edit_date < self.first_edit_date:
                 self.first_edit_date=first_edit_date
                 
             self.scan_date=datetime.now(pytz.utc)
