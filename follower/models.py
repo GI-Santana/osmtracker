@@ -2,6 +2,7 @@ from datetime import datetime
 import pytz
 from django.db import models
 import feedparser
+import urllib
 feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'
 
 # Create your models here.
@@ -11,8 +12,9 @@ class Mapper(models.Model):
     edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     first_edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     def check_edits(self):
+        user_encoded=urllib.quote_plus(self.user)
         feed=feedparser.parse('http://www.openstreetmap.org/user/'
-                          + self.user + '/edits/feed')
+                          + user_encoded + '/edits/feed')
         if len(feed.entries) > 0:
             published_parsed=feed.entries[0].published_parsed
             self.edit_date=datetime(published_parsed.tm_year
