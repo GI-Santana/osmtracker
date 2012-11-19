@@ -12,7 +12,7 @@
 </tr>
 </thead>
 {% for m in tracker_list %}
-<tr class="table-row">
+<tr class="{% cycle 'table-row-even' 'table-row-odd' %}">
   <td class="user_name" >
    <a href="http://www.openstreetmap.org/user/{{m.user}}/edits">{{m.user}}</a>
   </td>
