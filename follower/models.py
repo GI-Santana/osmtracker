@@ -12,9 +12,11 @@ class Mapper(models.Model):
     edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     first_edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     def check_edits(self):
-        user_encoded=urllib.quote_plus(self.user)
-        feed=feedparser.parse('http://www.openstreetmap.org/user/'
-                          + user_encoded + '/edits/feed')
+        url='http://www.openstreetmap.org/user/' \
+            +urllib.quote(self.user) + '/edits/feed'
+        feed=feedparser.parse(url)
+        if feed.status != 200:
+            return
         if len(feed.entries) > 0:
             published_parsed=feed.entries[0].published_parsed
             self.edit_date=datetime(published_parsed.tm_year
@@ -34,7 +36,6 @@ class Mapper(models.Model):
                                      ,published_parsed.tm_sec
                                      ,0
                                      ,pytz.utc)
-
             
             if self.first_edit_date==None or \
                     first_edit_date < self.first_edit_date:
