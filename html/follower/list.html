@@ -3,9 +3,10 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css" />
 <body>
 <table>
-<th>
-<td class="table-header">User</td>
-<td class="table-header">Last Changeset Date</td>
+<th class="table-header">
+<td>User</td>
+<td>Last Changeset Date</td>
+<td>First Edit Date</td>
 </th>
 {% for m in tracker_list %}
 <tr>
@@ -14,6 +15,9 @@
   </td>
   <td class="date">
      {{m.edit_date|date:"Y-m-d" }}
+  </td>
+   <td class="date">
+     {{m.first_edit_date|date:"Y-m-d" }}
   </td>
 </tr>
 {% endfor %}
