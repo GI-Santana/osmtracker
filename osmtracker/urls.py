@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^list', 'follower.views.list')
+    url(r'^admin/', include(admin.site.urls))
+    ,url(r'^list/list_action','follower.views.mapper_bulk_action')
+    ,url(r'^list', 'follower.views.list')                 
+    ,url(r'^reach_out/create','follower.views.reach_out_create')
 )

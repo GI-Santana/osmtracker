@@ -1,0 +1,33 @@
+<html>
+<title>OSM Tracker Mapper Reachout</title>
+<link rel="stylesheet" href="/static/style.css" type="text/css" />
+
+<form action="/reach_out/create", method="post">
+{% csrf_token %}
+<div id='email'>
+  <table class="base-table">
+<tr><th>Emails</th></tr>
+{% for email in emails %}
+  <tr class="{% cycle 'table-row-even' 'table-row-odd' %}" >
+    <td>
+      <input type="radio" name="email" value="{{email.id}}" />
+    </td>
+   <td>{{email.subject}}</td>
+  </tr>
+{% endfor %}
+</table>	     
+</div>
+<div id='mapper-list'>
+<table>
+{% for m in mappers %}
+<tr><td>{{m.user}}</td>
+<input type="hidden" name="mapper_{{ forloop.counter0}}" value="{{m.id}}" />
+</tr>
+{% endfor %}
+<input type="hidden" name="mapper_count" value="{{mappers|length}}" />
+</table>
+</div>
+
+<input type="submit" name="send" />
+</form>
+</html>

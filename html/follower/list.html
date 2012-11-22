@@ -5,14 +5,20 @@
 <table class="base-table">
 <thead>
 <tr class="table-header">
+<th class="table-header"></th>
 <th class="table-header">User</th>
 <th class="table-header">Last Changeset Date</th>
 <th class="table-header">First Edit Date</th>
 <th class="table-header">Edit Count</th>
 </tr>
 </thead>
+<form action="/list/list_action", method="get">
+
 {% for m in tracker_list %}
 <tr class="{% cycle 'table-row-even' 'table-row-odd' %}">
+  <td class="checkbox" >
+    <input type="checkbox" name="mapper_selected_{{m.id}}"/>
+  </td>
   <td class="user_name" >
    <a href="http://www.openstreetmap.org/user/{{m.user}}/edits">{{m.user}}</a>
   </td>
@@ -28,7 +34,8 @@
 </tr>
 {% endfor %}
 </table>
-
+<input type="submit" name="action" value="reach out" />
+</form>
 </body>
 
 </html>

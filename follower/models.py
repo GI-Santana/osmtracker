@@ -6,12 +6,18 @@ import urllib
 feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'
 
 # Create your models here.
+
+class Email(models.Model):
+    text=models.TextField()
+    subject=models.CharField(max_length=50)
+
 class Mapper(models.Model):
-    user=models.CharField(max_length=20)
+    user=models.CharField(max_length=99)
     scan_date=models.DateTimeField('last_scan_date',null=True,blank=True)
     edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     first_edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
     min_edit_count=models.IntegerField('min_edit_count',null=True,blank=True)
+    reach_outs=models.ManyToManyField(Email,through="ReachOut")
 
     def check_edits(self):
         url='http://www.openstreetmap.org/user/' \
@@ -46,4 +52,13 @@ class Mapper(models.Model):
                     self.min_edit_count < len(feed.entries):
                 self.min_edit_count=len(feed.entries)
             self.scan_date=datetime.now(pytz.utc)
+
+
+    
+class ReachOut(models.Model):
+    mapper=models.ForeignKey(Mapper)
+    email=models.ForeignKey(Email)
+    contact_date=models.DateField()
+    responsed=models.BooleanField()
+    response=models.TextField(null=True,blank=True)
 
