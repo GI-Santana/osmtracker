@@ -1,8 +1,8 @@
 # Create your views here.
 from django.http import HttpResponse
-from follower.models import Mapper
+from follower.mapper import Mapper
 from follower.models import Email
-from follower.models import ReachOut
+from follower.reachout import ReachOut
 from django.template import Context,RequestContext,loader
 import datetime,pytz,time
 from django.contrib.auth.decorators import login_required
