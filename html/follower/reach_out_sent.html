@@ -1,0 +1,37 @@
+<html>
+<title>OSM Tracker Mapper Reachout</title>
+<link rel="stylesheet" href="/static/style.css" type="text/css" />
+
+{% csrf_token %}
+<div id='sent'>
+  <table class="base-table">
+<tr><th>Sent</th></tr>
+{% for reach in sent %}
+  <tr class="{% cycle 'table-row-even' 'table-row-odd' %}" >
+    <td>
+      {{reach.mapper.user}}
+    </td>
+  </tr>
+{% endfor %}
+</table>	     
+</div>
+
+<div id='failed'>
+  <table class="base-table">
+<tr><th>Failed</th></tr>
+{% for failure in failed %}
+  <tr class="{% cycle 'table-row-even' 'table-row-odd' %}" >
+    <td>
+      {{failure.mapper.user}} 
+    </td>
+    <td>
+      {{failure.reason}}
+    </td>
+    <td>
+      {{failure.code}}
+    </td>
+  </tr>
+{% endfor %}
+</table>	     
+</div>
+</html>

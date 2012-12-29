@@ -6,6 +6,11 @@ from follower.models import ReachOut
 from django.template import Context,RequestContext,loader
 import datetime,pytz,time
 from django.contrib.auth.decorators import login_required
+import urllib2,urllib
+import cookielib,StringIO,Cookie
+import xml.etree.cElementTree as ElementTree
+inptag = '{http://www.w3.org/1999/xhtml}input'
+formtag = '{http://www.w3.org/1999/xhtml}form'
 
 @login_required
 def list(request):
@@ -66,12 +71,19 @@ def reach_out_create(request):
     Create a mapper reach out in response to the requested actions
     """
     print request
+    email=None
     if request.POST.has_key('email'):
         email_id=request.POST['email']
         email = Email.objects.filter(id=email_id)
     count=0
     if request.POST.has_key('mapper_count'):
         count=int(request.POST['mapper_count'])
+    cookies = authenticate_osm(request.POST['osm_user'],
+                                       request.POST['osm_password'])
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
+    sent=[]
+    failed=[]
+
     for idx in range(0,count):
         if request.POST.has_key('mapper_'+str(idx)):
             mapper_id=request.POST['mapper_'+str(idx)]
@@ -79,8 +91,55 @@ def reach_out_create(request):
             reach = ReachOut(email=email[0]
                              ,contact_date=datetime.datetime.now()
                              ,mapper=mapper[0])
-            #send the email.
-            reach.save()
-            print "saved"
+            try:           
+                reach.sendMessage(opener,cookies)
+                reach.save()
+                sent.append(reach)
+            except ReachOut.SendException,e:
+                failed.append(e)
+            
+    t=loader.get_template('follower/reach_out_sent.html')
     
-    return HttpResponse('')
+    c=RequestContext(request,{'sent': sent,
+               'failed' : failed })
+    return HttpResponse(t.render(c))
+
+
+def authenticate_osm(username,password):
+    """
+    establishes a client connection with OSM and authenticates against the API
+    This method will return a set of cookies in a CookieJar usable to identify
+    the session in future calls
+    
+    """
+
+    login_payload={}
+
+    request=urllib2.Request('http://api06.dev.openstreetmap.org/login')
+    cookies = cookielib.CookieJar()
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
+    response_tokenfetch = opener.open(request)
+    html = response_tokenfetch.read()
+    htmlfile=StringIO.StringIO(html)
+    
+    xml_tree = ElementTree.parse(htmlfile)
+    for form in xml_tree.getiterator(formtag):                
+        for field in form.getiterator(inptag):
+            if 'name' in field.attrib and 'value' in field.attrib:
+                login_payload[field.attrib['name']] = field.attrib['value']
+    login_payload['username'] = username
+    login_payload['password'] = password
+    for field in login_payload:
+        login_payload[field]=login_payload[field].encode('utf-8')
+        #print("%s : %s " % (field, login_payload[field]))
+
+    #cookies.extract_cookies(response_tokenfetch,request)
+    print cookies
+    cookies.add_cookie_header(request)
+    response = opener.open(request,urllib.urlencode(login_payload))
+    print response.info()
+    print response.geturl()
+    #cookies.extract_cookies(response,request)  
+    
+    return cookies
+
