@@ -1,7 +1,7 @@
 from django.db import models
 import feedparser
 from datetime import datetime
-import pytz
+import pytz,urllib
 from models import Email
 
 feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'

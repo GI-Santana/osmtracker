@@ -1,6 +1,6 @@
-<html>
-<title>OSM Tracker Mapper Reachout</title>
-<link rel="stylesheet" href="/static/style.css" type="text/css" />
+{% extends "follower/base.html" %}
+
+{% block content %}
 
 {% csrf_token %}
 <div id='sent'>
@@ -34,4 +34,5 @@
 {% endfor %}
 </table>	     
 </div>
-</html>
+
+{% endblock %}

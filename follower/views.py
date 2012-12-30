@@ -1,5 +1,6 @@
 # Create your views here.
 from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from follower.mapper import Mapper
 from follower.models import Email
 from follower.reachout import ReachOut
@@ -10,6 +11,10 @@ import urllib2,urllib
 import cookielib,StringIO,Cookie
 import xml.etree.cElementTree as ElementTree
 from django.views.generic.edit import UpdateView
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import DeleteView
+from django.views.generic.list import ListView
+
 from django.forms import ModelForm
 from django.forms import IntegerField
 
@@ -113,6 +118,14 @@ class MapperForm(ModelForm):
     class Meta:
         model = Mapper
         exclude = [ 'reach_outs']
+
+class MapperCreateView(CreateView):
+    form_class= MapperForm
+    success_url='/mapper/list'
+    initial = {}
+    Model = Mapper
+    template_name='follower/mapper_form.html'
+
 class MapperView(UpdateView):
     queryset = Mapper.objects.all()
     pk_url_kwarg='id'
@@ -147,6 +160,52 @@ class MapperView(UpdateView):
                 reach_outs.append(data)
         context['reach_outs'] = reach_outs
         return context
+
+
+
+class EmailForm(ModelForm):
+    class Meta:
+        model = Email
+
+class EmailCreateView(CreateView):
+    form_class= EmailForm
+    success_url='/email/list'
+    initial = {}
+    Model = Email
+    template_name='follower/email_form.html'
+
+class EmailUpdateView(UpdateView):
+    queryset = Email.objects.all()
+    pk_url_kwarg='id'
+    initial = { }
+    def get_context_data(self,**kwargs):
+        context = super(UpdateView,self).get_context_data(**kwargs)
+        context['id'] = self.object.id
+        return context
+
+class EmailDeleteView(DeleteView):
+    success_url='/email/list'
+    Model=Email
+    queryset = Email.objects.all()
+    pk_url_kwarg='id'    
+    def delete(self,request,*args,**kwargs):
+        """ 
+        deletes the email object.
+        only delete the email if it hasn't been used
+        """
+        self.object = self.get_object()
+        usages=ReachOut.objects.all().filter(email=self.object.id)
+        if len(usages) > 0:
+             t=loader.get_template('follower/email_delete_forbidden.html')
+             c=Context({'reason': 'This email has already been sent'})
+             return HttpResponseForbidden(t.render(c))
+        else:
+            return super(DeleteView,self).delete(request,*args,**kwargs)
+class EmailListView(ListView):
+    queryset = Email.objects.all()
+    context_object_name='emails'
+    Model = Email
+    
 def authenticate_osm(username,password):
     """
     establishes a client connection with OSM and authenticates against the API

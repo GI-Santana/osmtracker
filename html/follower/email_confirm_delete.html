@@ -1,0 +1,11 @@
+{% extends "follower/base.html" %}
+
+{% block content %}
+<form action="" method="POST">
+{% csrf_token %}
+{{email.subject}}
+<p>
+<input type="submit" value="Delete" />
+</form>
+
+{% endblock %}

@@ -4,6 +4,12 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 from follower.views import MapperView
+from follower.views import MapperCreateView
+from follower.views import EmailCreateView
+from follower.views import EmailUpdateView
+from follower.views import EmailDeleteView
+from follower.views import EmailListView
+
 from django.contrib.auth.decorators import login_required, permission_required
 
 urlpatterns = patterns('',
@@ -20,4 +26,9 @@ urlpatterns = patterns('',
     ,url(r'^mapper/list', 'follower.views.mapper_list')                 
     ,url(r'^reach_out/create','follower.views.reach_out_create')
     ,url(r'^mapper/(?P<id>\d+)',login_required(MapperView.as_view()))
+    ,url(r'^mapper/create', login_required(MapperCreateView.as_view()))
+    ,url(r'^email/create',login_required(EmailCreateView.as_view()))
+    ,url(r'^email/(?P<id>\d+)/delete',login_required(EmailDeleteView.as_view()))
+    ,url(r'^email/(?P<id>\d+)', login_required(EmailUpdateView.as_view()))
+    ,url(r'^email/list', login_required(EmailListView.as_view()))                   
 )

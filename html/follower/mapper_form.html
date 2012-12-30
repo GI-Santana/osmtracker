@@ -1,12 +1,16 @@
-<html>
+{% extends "follower/base.html" %}
+
+{%block content %}
+
 <form action="" method="POST">
 {% csrf_token %}
 {{form.as_p}}
 <input type="submit" value="Submit"/>
 </form>
 
-<div id="table">
-<table>
+{% if form.user.value  %}
+<h2>Message History</h2>
+<table class="base-table">
 <tr><th>subject</th><th>contact_date</th><th>body</th></tr>
 {% for reach in reach_outs %}
 <tr>
@@ -15,12 +19,11 @@
   <td>{{ reach.body }} </td>
 </tr>
 {% endfor %}
-
 </table>
-</div>
 
 <iframe src="http://www.openstreetmap.org/user/{{form.user.value}}"  width="100%" height="300px" />
 
+{% endif %}
 
-</html>
+{% endblock %}
 

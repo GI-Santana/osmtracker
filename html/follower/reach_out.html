@@ -1,6 +1,6 @@
-<html>
-<title>OSM Tracker Mapper Reachout</title>
-<link rel="stylesheet" href="/static/style.css" type="text/css" />
+{% extends "follower/base.html" %}
+
+{% block content %}
 
 <form action="/reach_out/create", method="post">
 {% csrf_token %}
@@ -32,14 +32,25 @@ This email will be sent the the following mappers
 </table>
 </div>
 Enter Your OSM credentials for sending the message
-<div>
+<table class="base-table">
+<tr>
+<td>
 OSM User Id
+</td>
+<td>
 <input type="text" name="osm_user" />
-</div>
-<div>
+</td>
+</tr>
+<tr>
+<td>
 OSM Password
+</td>
+<td>
 <input type="password" name="osm_password"/>
-</div>
+</td>
+</tr>
+</table>
 <input type="submit" name="send" />
 </form>
-</html>
+
+{% endblock %}
