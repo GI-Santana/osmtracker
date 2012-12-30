@@ -5,18 +5,22 @@
 <form action="/reach_out/create", method="post">
 {% csrf_token %}
 <div id='email'>
+<h2>Select the Email to send</h2>
   <table class="base-table">
-<tr><th>Emails</th></tr>
+<tr><th></th> <th>Subject</th><th>Body</th></tr>
 {% for email in emails %}
   <tr class="{% cycle 'table-row-even' 'table-row-odd' %}" >
     <td>
       <input type="radio" name="email" value="{{email.id}}" />
     </td>
    <td>{{email.subject}}</td>
+   <td>{{email.text}}</td>
   </tr>
 {% endfor %}
 </table>	     
 </div>
+<p>
+This email will be sent the the following mappers
 <div id='mapper-list'>
 <table>
 {% for m in mappers %}
@@ -27,6 +31,7 @@
 <input type="hidden" name="mapper_count" value="{{mappers|length}}" />
 </table>
 </div>
+Enter Your OSM credentials for sending the message
 <div>
 OSM User Id
 <input type="text" name="osm_user" />
