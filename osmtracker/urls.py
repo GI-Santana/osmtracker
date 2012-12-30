@@ -4,6 +4,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 from follower.views import MapperView
+from django.contrib.auth.decorators import login_required, permission_required
 
 urlpatterns = patterns('',
     # Examples:
@@ -18,5 +19,5 @@ urlpatterns = patterns('',
     ,url(r'^list/list_action','follower.views.mapper_bulk_action')
     ,url(r'^mapper/list', 'follower.views.mapper_list')                 
     ,url(r'^reach_out/create','follower.views.reach_out_create')
-    ,url(r'^mapper/(?P<id>\d+)',MapperView.as_view())
+    ,url(r'^mapper/(?P<id>\d+)',login_required(MapperView.as_view()))
 )
