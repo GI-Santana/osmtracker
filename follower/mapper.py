@@ -9,8 +9,8 @@ feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'
 class Mapper(models.Model):
     user=models.CharField(max_length=99)
     scan_date=models.DateTimeField('last_scan_date',null=True,blank=True)
-    edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
-    first_edit_date=models.DateTimeField('last_edit_date',null=True,blank=True)
+    edit_date=models.DateTimeField('edit_date',null=True,blank=True)
+    first_edit_date=models.DateTimeField('first_edit_date',null=True,blank=True)
     min_edit_count=models.IntegerField('min_edit_count',null=True,blank=True)
     reach_outs=models.ManyToManyField(Email,through="ReachOut")
 

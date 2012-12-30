@@ -9,11 +9,15 @@ from django.contrib.auth.decorators import login_required
 import urllib2,urllib
 import cookielib,StringIO,Cookie
 import xml.etree.cElementTree as ElementTree
+from django.views.generic.edit import UpdateView
+from django.forms import ModelForm
+from django.forms import IntegerField
+
 inptag = '{http://www.w3.org/1999/xhtml}input'
 formtag = '{http://www.w3.org/1999/xhtml}form'
 
 @login_required
-def list(request):
+def mapper_list(request):
     """
     Display a list of mappers we are following
     If the mapppers changeset RSS feed hasn't been scanned
@@ -104,7 +108,45 @@ def reach_out_create(request):
                'failed' : failed })
     return HttpResponse(t.render(c))
 
+class MapperForm(ModelForm):
+    extra='stuff'
+    class Meta:
+        model = Mapper
+        exclude = [ 'reach_outs']
+class MapperView(UpdateView):
+    queryset = Mapper.objects.all()
+    pk_url_kwarg='id'
+    context_object_name='mapper'
+    initial = { 
 
+        }
+    success_url='/mapper/list'
+    form_class = MapperForm
+    def form_valid(self,form):
+        form.save()
+        return super(UpdateView,self).form_valid(form)
+
+    def form_invalid(self,form):
+        return True
+    def get_object(self,**kwargs):
+        self.object = super(UpdateView,self).get_object(**kwargs)
+        return self.object
+    def get_context_data(self,**kwargs):
+        # Call the base implementation first to get a context
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        # get a list of all reachouts
+        reach_outs = []
+        for email in self.object.reach_outs.all():
+            reaches = ReachOut.objects.all().filter(email=email,
+                                         mapper=self.object)
+            for reach in reaches:
+                data = { 'contact_date' : reach.contact_date ,
+                         'subject' : reach.email.subject ,
+                         'body' : reach.email.text,
+                         }
+                reach_outs.append(data)
+        context['reach_outs'] = reach_outs
+        return context
 def authenticate_osm(username,password):
     """
     establishes a client connection with OSM and authenticates against the API

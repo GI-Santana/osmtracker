@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
+from follower.views import MapperView
 
 urlpatterns = patterns('',
     # Examples:
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls))
     ,url(r'^list/list_action','follower.views.mapper_bulk_action')
-    ,url(r'^list', 'follower.views.list')                 
+    ,url(r'^mapper/list', 'follower.views.mapper_list')                 
     ,url(r'^reach_out/create','follower.views.reach_out_create')
+    ,url(r'^mapper/(?P<id>\d+)',MapperView.as_view())
 )
