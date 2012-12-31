@@ -11,6 +11,7 @@ from follower.views import EmailDeleteView
 from follower.views import EmailListView
 
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.views import login
 
 urlpatterns = patterns('',
     # Examples:
@@ -22,6 +23,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls))
+    ,url(r'^accounts/login/$', 'django.contrib.auth.views.login')
     ,url(r'^list/list_action','follower.views.mapper_bulk_action')
     ,url(r'^mapper/list', 'follower.views.mapper_list')                 
     ,url(r'^reach_out/create','follower.views.reach_out_create')

@@ -14,6 +14,7 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
+from django.conf import settings
 
 from django.forms import ModelForm
 from django.forms import IntegerField
@@ -232,7 +233,7 @@ def authenticate_osm(username,password):
 
     login_payload={}
 
-    request=urllib2.Request('http://api06.dev.openstreetmap.org/login')
+    request=urllib2.Request(settings.OSM_API + '/login')
     cookies = cookielib.CookieJar()
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
     response_tokenfetch = opener.open(request)

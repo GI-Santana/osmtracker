@@ -5,6 +5,7 @@ from follower.models import Email
 import urllib,urllib2
 import cookielib,StringIO,Cookie
 import xml.etree.cElementTree as ElementTree
+from django.conf import settings
 
 inptag = '{http://www.w3.org/1999/xhtml}input'
 formtag = '{http://www.w3.org/1999/xhtml}form'
@@ -27,7 +28,7 @@ class ReachOut(models.Model):
     def sendMessage(self,opener,cookies):
         
         payload = {}
-        send_url = "http://api06.dev.openstreetmap.org/message/new/%s" % self.mapper.user
+        send_url = settings.OSM_API + "/message/new/%s" % self.mapper.user
         request_getform=urllib2.Request(send_url)
         cookies.add_cookie_header(request_getform)
         try:

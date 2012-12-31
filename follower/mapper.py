@@ -3,6 +3,7 @@ import feedparser
 from datetime import datetime
 import pytz,urllib
 from models import Email
+from django.conf import settings
 
 feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'
 
@@ -15,7 +16,7 @@ class Mapper(models.Model):
     reach_outs=models.ManyToManyField(Email,through="ReachOut")
 
     def check_edits(self):
-        url='http://www.openstreetmap.org/user/' \
+        url=settings.OSM_API + '/user/' \
             +urllib.quote(self.user) + '/edits/feed'
         feed=feedparser.parse(url)
         if feed.status != 200:
