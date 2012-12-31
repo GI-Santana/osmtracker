@@ -21,7 +21,9 @@
 {% endfor %}
 </table>
 
-<iframe src="http://www.openstreetmap.org/user/{{form.user.value}}"  width="100%" height="300px" />
+<div id="osm-iframe">
+<iframe src="http://www.openstreetmap.org/user/{{form.user.value}}"  />
+</div>
 
 {% endif %}
 

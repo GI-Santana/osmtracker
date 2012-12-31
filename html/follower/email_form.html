@@ -1,15 +1,45 @@
 {% extends "follower/base.html" %}
 
 {% block content %}
+
+<h2>
+Enter Email Message
+</h2>
+
+
+
 <form action="" method="POST">
 {% csrf_token %}
-{{form.as_p}}
+<table class="base-table">
+<tr>
+<td>Subject</td><td>
+{% if sent %}
+{{form.subject.value}}
+{% else %}
+{{form.subject}}
+{% endif %}
+</td>
+</tr>
+<tr>
+<td>Body</td><td>
+{% if sent %}
+{{form.text.value }}
+{% else %}
+{{form.text}}
+{% endif %}
+</td>
+</tr>
+</table>
+{% if not sent  %}
+<div class="button-list">
 <input type="submit" value="Submit"/>
 </form>
-
-<form action="/email/{{id}}/delete" method="POST">
+<form action="/email/{{ id }}/delete" method="POST">
 {% csrf_token %}
 <input type="submit" value="Delete" />
+{% endif %}
 </form>
+</div>
+
 
 {% endblock %}

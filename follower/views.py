@@ -178,22 +178,38 @@ class EmailUpdateView(UpdateView):
     queryset = Email.objects.all()
     pk_url_kwarg='id'
     initial = { }
+    success_url="/email/list"
     def get_context_data(self,**kwargs):
         context = super(UpdateView,self).get_context_data(**kwargs)
         context['id'] = self.object.id
+        usages=ReachOut.objects.all().filter(email=self.object.id)
+        if len(usages) > 0:
+            context['sent'] = True
+        else:
+            context['sent'] = False
         return context
+    def form_valid(self,form):
+        self.object = self.get_object()
+        usages=ReachOut.objects.all().filter(email=self.object.id)
+        if len(usages) > 0:
+            t=loader.get_template('follower/email_delete_forbidden.html')
+            c=Context({'reason': 'This email has already been sent'})
+            return HttpResponseForbidden(t.render(c))
+        else:
+            return super(UpdateView,self).form_valid(form)
 
 class EmailDeleteView(DeleteView):
     success_url='/email/list'
     Model=Email
     queryset = Email.objects.all()
-    pk_url_kwarg='id'    
+    pk_url_kwarg='id'      
     def delete(self,request,*args,**kwargs):
         """ 
         deletes the email object.
         only delete the email if it hasn't been used
         """
         self.object = self.get_object()
+    
         usages=ReachOut.objects.all().filter(email=self.object.id)
         if len(usages) > 0:
              t=loader.get_template('follower/email_delete_forbidden.html')

@@ -45,3 +45,67 @@ h1 {
     width: 100%;
     background: rgb(238,240,235);
 }
+
+#nav-bar {
+    margin: 0px;
+    font-size: 16px;
+    width: 100%;
+    float: left;
+    color: #ffffff;
+    ;background-color: #f0f0f0;
+    background-color: #000000;
+   
+}
+#nav-bar ul, #nav-bar {
+    margin: 0px;
+    font-size: 16px;    
+    float: left;
+    list-style-type: none;
+}
+#nav-bar li, #nav-bar a { 	
+    margin: 0px 0px 0px 5px;
+    padding: 0px;
+    font-size: 16px;   
+    margin-left: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    float: left ;
+}
+#banner {
+    font-size: 26px;
+    color: #ffffff;
+    ;background-color: #f0f0f0;
+    background-color: #000000;
+    font-weight: bold;
+   border-width: 0px;
+   padding-top: 25px;
+   padding-bottom: 25px;
+}
+#banner h1 {
+    font-size: 26px;
+    color: #ffffff;
+    ;background-color: #f0f0f0;
+    background-color: #000000;
+    font-weight: bold;
+    border-width: 0px;
+    font-family: "Copperplate / Copperplate Gothic Light", "sans-serif";
+}
+
+#osm-iframe {
+    padding-top: 25px;
+    padding-left: 10px;
+    padding-right: 10px;    
+
+}
+#osm-iframe iframe {
+    width: 80%;
+    height: 300px;
+    float: center;
+}
+.button-list {
+    padding-top: 5px;
+}
+.button-list input{
+    float: left;
+    margin-right: 5px;
+}

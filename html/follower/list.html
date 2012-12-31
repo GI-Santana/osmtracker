@@ -34,7 +34,12 @@
 </tr>
 {% endfor %}
 </table>
+<div class="button-list">
 <input type="submit" name="action" value="reach out" />
+<form action="/mapper/create" method="GET">
+<input type="submit" name="action" value="new mapper"/>
 </form>
-<a href="/mapper/create">new mapper</a>
+</div>
+</form>
+
 {% endblock %}
