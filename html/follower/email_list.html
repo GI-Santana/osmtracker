@@ -1,0 +1,21 @@
+{% extends "follower/base.html" %}
+
+{% block content %}
+<div>
+<table class="base-table" >
+<tr><th>Subject</th><th> Body </th></tr>
+{% for email in emails %}
+<tr class="{% cycle 'table-row-even' 'table-row-odd' %}"  >
+<td> <a href="/email/{{ email.id }}">{{ email.subject }} </a> </td>
+<td> {{ email.text}} </td>
+</tr>
+{% endfor %}
+</table>
+</div>
+<div class="button-list">
+<form action="/email/create" method="GET">
+<input type="submit" name="action" value="new email"/>
+</form>
+</div>
+
+{% endblock %}
