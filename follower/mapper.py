@@ -16,7 +16,7 @@ class Mapper(models.Model):
     reach_outs=models.ManyToManyField(Email,through="ReachOut")
 
     def check_edits(self):
-        url=settings.OSM_API + '/user/' \
+        url='http://' + settings.OSM_API + '/user/' \
             +urllib.quote(self.user) + '/edits/feed'
         feed=feedparser.parse(url)
         if feed.status != 200:

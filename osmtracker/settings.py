@@ -154,5 +154,5 @@ LOGGING = {
 import dj_database_url
 DATABASES['default']= dj_database_url.config()
 
-OSM_API = 'https://www.openstreetmap.org'
+OSM_API = 'www.openstreetmap.org'
 #OSM_API='http://api06.dev.openstreetmap.org'

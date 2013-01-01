@@ -242,7 +242,7 @@ def authenticate_osm(username,password):
 
     login_payload={}
 
-    request=urllib2.Request(settings.OSM_API + '/login')
+    request=urllib2.Request('https://' + settings.OSM_API + '/login')
     cookies = cookielib.CookieJar()
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookies))
     response_tokenfetch = opener.open(request)

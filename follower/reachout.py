@@ -28,7 +28,7 @@ class ReachOut(models.Model):
     def sendMessage(self,opener,cookies):
         
         payload = {}
-        send_url = settings.OSM_API + "/message/new/%s" % self.mapper.user
+        send_url = 'http://' + settings.OSM_API + "/message/new/%s" % self.mapper.user
         request_getform=urllib2.Request(send_url)
         cookies.add_cookie_header(request_getform)
         try:
@@ -53,8 +53,16 @@ class ReachOut(models.Model):
                 cookies.add_cookie_header(request_send)
                 print cookies
                 print send_url
+                print payload
                 response_send = opener.open(request_send,
                                             urllib.urlencode(payload))
+                if response_send.url != send_url:
+                    # the POST was redirected. This is probably an error
+                    raise ReachOut.SendException(mapper=self.mapper,
+                                                 reason='redirect to' +
+                                                 response_send.url,
+                                                 code=0)
+                print response_send.info()
             else:
                 raise ReachOut.SendException(mapper=self.mapper
                                         ,reason='message[title] not found'
