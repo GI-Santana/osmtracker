@@ -56,12 +56,6 @@ class ReachOut(models.Model):
                 print payload
                 response_send = opener.open(request_send,
                                             urllib.urlencode(payload))
-                if response_send.url != send_url:
-                    # the POST was redirected. This is probably an error
-                    raise ReachOut.SendException(mapper=self.mapper,
-                                                 reason='redirect to' +
-                                                 response_send.url,
-                                                 code=0)
                 print response_send.info()
             else:
                 raise ReachOut.SendException(mapper=self.mapper
