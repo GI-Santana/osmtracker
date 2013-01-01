@@ -10,6 +10,7 @@
 <th class="table-header">Last Changeset Date</th>
 <th class="table-header">First Edit Date</th>
 <th class="table-header">Edit Count</th>
+<th class="table-heaer">Messages Sent</th>
 </tr>
 </thead>
 <form action="/list/list_action", method="get">
@@ -30,6 +31,9 @@
   </td>
   <td>
     {{m.min_edit_count}}
+  </td>
+  <td>
+    {{m.reach_outs.all|length}}
   </td>
 </tr>
 {% endfor %}
