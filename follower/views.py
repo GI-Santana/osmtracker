@@ -98,6 +98,15 @@ def reach_out_create(request):
         if request.POST.has_key('mapper_'+str(idx)):
             mapper_id=request.POST['mapper_'+str(idx)]
             mapper = Mapper.objects.filter(id=mapper_id)
+            #first check to see if the email has been sent already.
+            already_sent=ReachOut.objects.all().filter(email=email[0],
+                                       mapper=mapper[0])
+            if len(already_sent) > 0:
+                error = { 'mapper':mapper,
+                          'reason':'already sent',
+                          'code':0}
+                failed.append( error )
+                continue
             reach = ReachOut(email=email[0]
                              ,contact_date=datetime.datetime.now()
                              ,mapper=mapper[0])
