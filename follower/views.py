@@ -36,7 +36,7 @@ def update_mappers(request):
     in the last 24h we scan it for updates
     """
     yesterday=datetime.datetime.now()-datetime.timedelta(days=1)
-    update_list=Mapper.objects.all().filter(scan_date__lte=yesterday)
+    update_list=Mapper.objects.all().exclude(scan_date__gt=yesterday)
 
     def mapper_update():
         for mapper in update_list:
