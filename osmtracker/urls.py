@@ -9,6 +9,7 @@ from follower.views import EmailCreateView
 from follower.views import EmailUpdateView
 from follower.views import EmailDeleteView
 from follower.views import EmailListView
+from follower.views import MapperListView
 
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.views import login
@@ -25,7 +26,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls))
     ,url(r'^accounts/login/$', 'django.contrib.auth.views.login')
     ,url(r'^list/list_action','follower.views.mapper_bulk_action')
-    ,url(r'^mapper/list', 'follower.views.mapper_list')                 
+    ,url(r'^mapper_update', 'follower.views.update_mappers')                 
+    ,url(r'^mapper/list', login_required(MapperListView.as_view()))
     ,url(r'^reach_out/create','follower.views.reach_out_create')
     ,url(r'^mapper/(?P<id>\d+)',login_required(MapperView.as_view()))
     ,url(r'^mapper/create', login_required(MapperCreateView.as_view()))

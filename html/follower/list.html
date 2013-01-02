@@ -30,7 +30,11 @@
      {{m.first_edit_date|date:"Y-m-d" }}
   </td>
   <td>
+    {% if m.min_edit_count >= 20 %}
+    >=20
+    {% else %}
     {{m.min_edit_count}}
+    {% endif %}
   </td>
   <td>
     {{m.reach_outs.all|length}}

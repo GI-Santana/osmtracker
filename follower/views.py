@@ -18,31 +18,35 @@ from django.conf import settings
 
 from django.forms import ModelForm
 from django.forms import IntegerField
+import threading
 
 inptag = '{http://www.w3.org/1999/xhtml}input'
 formtag = '{http://www.w3.org/1999/xhtml}form'
 
+class MapperListView(ListView):
+    queryset = Mapper.objects.all().order_by('-edit_date')
+    model = Mapper
+    context_object_name = 'tracker_list'
+    template_name='follower/list.html'
+
 @login_required
-def mapper_list(request):
+def update_mappers(request):
     """
-    Display a list of mappers we are following
     If the mapppers changeset RSS feed hasn't been scanned
     in the last 24h we scan it for updates
     """
-    tracker_list=Mapper.objects.all().order_by('-edit_date')
-    yesterday=datetime.datetime.now()-datetime.timedelta(days=1)    
-    for mapper in tracker_list:
-        if mapper.scan_date==None or  \
-        mapper.scan_date.utctimetuple() < yesterday.utctimetuple():
+    yesterday=datetime.datetime.now()-datetime.timedelta(days=1)
+    update_list=Mapper.objects.all().filter(scan_date__lte=yesterday)
+
+    def mapper_update():
+        for mapper in update_list:
             mapper.check_edits()
-            mapper.save()
-            #sleep for 10 seconds after checking the
-            #RSS feed. We don't want to overload OSM
+            mapper.save
+            yield '<!-- test --> '
             time.sleep(3)
-    t=loader.get_template('follower/list.html')
-    c=Context({'tracker_list':tracker_list})
-    
-    return HttpResponse(t.render(c))
+        yield '<html>updates complete</html>'
+    response  = HttpResponse(mapper_update())    
+    return response;
 
 @login_required
 def mapper_bulk_action(request):
