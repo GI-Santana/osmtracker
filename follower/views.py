@@ -41,7 +41,7 @@ def update_mappers(request):
     def mapper_update():
         for mapper in update_list:
             mapper.check_edits()
-            mapper.save
+            mapper.save()
             yield '<!-- test --> '
             time.sleep(3)
         yield '<html>updates complete</html>'
