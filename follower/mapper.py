@@ -4,10 +4,14 @@ from datetime import datetime
 import pytz,urllib
 from models import Email
 from django.conf import settings
-from django.db.models import Q
+
+
 feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'
 
 class Mapper(models.Model):
+    """
+    A class that represents a mapper (an openstreetmap contributor)    
+    """
     user=models.CharField(max_length=99)
     scan_date=models.DateTimeField('last_scan_date',null=True,blank=True)
     edit_date=models.DateTimeField('edit_date',null=True,blank=True)
@@ -16,12 +20,17 @@ class Mapper(models.Model):
     reach_outs=models.ManyToManyField(Email,through="ReachOut")
 
     def check_edits(self):
+        """
+        Queries the OSM RSS feed for this mapper to check for
+        new edits
+        """
         url='http://' + settings.OSM_API + '/user/' \
             +urllib.quote(self.user) + '/edits/feed'
         feed=feedparser.parse(url)
         if feed.status != 200:
             return
         if len(feed.entries) > 0:
+            #parse the latest changeset fo the date.
             published_parsed=feed.entries[0].published_parsed
             self.edit_date=datetime(published_parsed.tm_year
                                     ,published_parsed.tm_mon
@@ -40,7 +49,8 @@ class Mapper(models.Model):
                                      ,published_parsed.tm_sec
                                      ,0
                                      ,pytz.utc)
-            
+            #only update the first edit date if that date is
+            #earlier than the one we already have 
             if self.first_edit_date==None or \
                     first_edit_date < self.first_edit_date:
                 self.first_edit_date=first_edit_date

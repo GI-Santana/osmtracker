@@ -11,12 +11,22 @@ inptag = '{http://www.w3.org/1999/xhtml}input'
 formtag = '{http://www.w3.org/1999/xhtml}form'
 
 class ReachOut(models.Model):
+    """
+    A ReachOut happens when we send an message(email) to a particular
+    mapper.   The reachout is a many-to-many join class that connects
+    mappers to emails.
+    """
     mapper=models.ForeignKey(Mapper)
     email=models.ForeignKey(Email)
     contact_date=models.DateField()
     responsed=models.BooleanField()
     response=models.TextField(null=True,blank=True)
+
+    
     class SendException(Exception):
+        """ 
+        An exception that is raised when an error sending the message occurs
+        """
         reason=None
         code=None
         mapper=None
@@ -26,9 +36,25 @@ class ReachOut(models.Model):
             self.mapper=mapper
 
     def sendMessage(self,opener,cookies):
-        
+        """
+        Sends a message through through the OSM messaging API.
+
+        opener - A urllib2 opener class
+
+        cookies - a CookieJar object that contains the osm authentication
+                  cookies.
+
+        """
         payload = {}
         send_url = 'http://' + settings.OSM_API + "/message/new/%s" % self.mapper.user
+        """
+        send a GET request to the API to get the blank HTML form.
+        We need to get this form to a hidden varaiable value that needs
+        to be resubmitted in the POST request in order for the API/rails port
+        to accept the message.
+        
+        
+        """
         request_getform=urllib2.Request(send_url)
         cookies.add_cookie_header(request_getform)
         try:
@@ -51,13 +77,16 @@ class ReachOut(models.Model):
                     payload[field]=payload[field].encode('utf-8')
                 request_send = urllib2.Request(send_url)
                 cookies.add_cookie_header(request_send)
-                print cookies
-                print send_url
-                print payload
+                """
+                Send the message as a POST.
+                """
                 response_send = opener.open(request_send,
                                             urllib.urlencode(payload))
-                print response_send.info()
             else:
+                """
+                The HTML form we fetched didn't look like we expected.
+                Instead of blindly POSTing our data we will throw an error.
+                """
                 raise ReachOut.SendException(mapper=self.mapper
                                         ,reason='message[title] not found'
                                         ,code=0)

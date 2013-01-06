@@ -24,6 +24,9 @@ inptag = '{http://www.w3.org/1999/xhtml}input'
 formtag = '{http://www.w3.org/1999/xhtml}form'
 
 class MapperListView(ListView):
+    """
+    A view class for /mapper/list that displays a list of mappers
+    """
     queryset = Mapper.objects.all().order_by('-edit_date')
     model = Mapper
     context_object_name = 'tracker_list'
@@ -42,7 +45,11 @@ def update_mappers(request):
         for mapper in update_list:
             mapper.check_edits()
             mapper.save()
-            yield '<!-- test --> '
+            """
+            omit some HTML comments to prevent the connection from timing out
+            we also pause for 3 seconds to avoid overloading the OSM API
+            """
+            yield '<!-- test --> '        
             time.sleep(3)
         yield '<html>updates complete</html>'
     response  = HttpResponse(mapper_update())    
@@ -54,7 +61,6 @@ def mapper_bulk_action(request):
     Perform a bulk action to a list of mappers.
     This view is for dispatching bulk actions on a list of mappers
     """
-    print request
     if request.GET.has_key('action') and request.GET['action']=='reach out':
         return reach_out(request)
 
@@ -82,9 +88,8 @@ def reach_out(request):
 @login_required
 def reach_out_create(request):
     """
-    Create a mapper reach out in response to the requested actions
+    Create a mapper reach out in response to the requested actions.
     """
-    print request
     email=None
     if request.POST.has_key('email'):
         email_id=request.POST['email']
@@ -127,13 +132,19 @@ def reach_out_create(request):
                'failed' : failed })
     return HttpResponse(t.render(c))
 
+
 class MapperForm(ModelForm):
-    extra='stuff'
+    """
+    A Form for mapper data.
+    """
     class Meta:
         model = Mapper
         exclude = [ 'reach_outs']
 
 class MapperCreateView(CreateView):
+    """
+    A create view class used for the view that creates new mapper instances
+    """
     form_class= MapperForm
     success_url='/mapper/list'
     initial = {}
@@ -265,11 +276,11 @@ def authenticate_osm(username,password):
         #print("%s : %s " % (field, login_payload[field]))
 
     #cookies.extract_cookies(response_tokenfetch,request)
-    print cookies
+    print "authenticate_osm:" + cookies
     cookies.add_cookie_header(request)
     response = opener.open(request,urllib.urlencode(login_payload))
-    print response.info()
-    print response.geturl()
+    print "authenticate_osm:" + response.info()
+    print "authenticate_osm:" + response.geturl()
     #cookies.extract_cookies(response,request)  
     
     return cookies
