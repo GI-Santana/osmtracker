@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz,urllib
 from models import Email
 from django.conf import settings
-
+from django.db.models import Q
 feedparser.USER_AGENT='OSMFollower/1.0 +http://mapexplorer.org'
 
 class Mapper(models.Model):
