@@ -34,5 +34,6 @@ urlpatterns = patterns('',
     ,url(r'^email/create',login_required(EmailCreateView.as_view()))
     ,url(r'^email/(?P<id>\d+)/delete',login_required(EmailDeleteView.as_view()))
     ,url(r'^email/(?P<id>\d+)', login_required(EmailUpdateView.as_view()))
-    ,url(r'^email/list', login_required(EmailListView.as_view()))                   
+    ,url(r'^email/list', login_required(EmailListView.as_view()))   
+    ,url(r'^$', login_required(MapperListView.as_view()))
 )
